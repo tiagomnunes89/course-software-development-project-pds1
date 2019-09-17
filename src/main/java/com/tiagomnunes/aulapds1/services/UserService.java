@@ -1,6 +1,7 @@
 package com.tiagomnunes.aulapds1.services;
 
 import com.tiagomnunes.aulapds1.dto.UserDTO;
+import com.tiagomnunes.aulapds1.dto.UserInsertDTO;
 import com.tiagomnunes.aulapds1.entities.User;
 import com.tiagomnunes.aulapds1.repositories.UserRepository;
 import com.tiagomnunes.aulapds1.services.exceptions.DatabaseException;
@@ -33,8 +34,10 @@ public class UserService {
         return new UserDTO(entity);
     }
 
-    public User insert(User user) {
-        return repository.save(user);
+    public UserDTO insert(UserInsertDTO userInsertDTO) {
+        User entity = userInsertDTO.toEntity();
+        entity =  repository.save(entity);
+        return new UserDTO(entity);
     }
 
     public void delete(Long id) {

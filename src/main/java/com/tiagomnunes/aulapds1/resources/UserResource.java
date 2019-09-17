@@ -1,6 +1,7 @@
 package com.tiagomnunes.aulapds1.resources;
 
 import com.tiagomnunes.aulapds1.dto.UserDTO;
+import com.tiagomnunes.aulapds1.dto.UserInsertDTO;
 import com.tiagomnunes.aulapds1.entities.User;
 import com.tiagomnunes.aulapds1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,11 +33,11 @@ public class UserResource {
 
 
     @PostMapping
-    public ResponseEntity<User> insert(@RequestBody User user) {
-        user = service.insert(user);
+    public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO userInsertDTO) {
+        UserDTO newDTO = service.insert(userInsertDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(uri).body(user);
+                .buildAndExpand(newDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(newDTO);
     }
 
     @DeleteMapping(value = "/{id}")
