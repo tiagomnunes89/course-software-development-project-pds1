@@ -1,5 +1,6 @@
 package com.tiagomnunes.aulapds1.resources;
 
+import com.tiagomnunes.aulapds1.dto.UserDTO;
 import com.tiagomnunes.aulapds1.entities.User;
 import com.tiagomnunes.aulapds1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +19,15 @@ public class UserResource {
     private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll() {
-        List<User> userList = service.findAll();
+    public ResponseEntity<List<UserDTO>> findAll() {
+        List<UserDTO> userList = service.findAll();
         return ResponseEntity.ok().body(userList);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
-        User user = service.findById(id);
-        return ResponseEntity.ok().body(user);
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        UserDTO userDTO = service.findById(id);
+        return ResponseEntity.ok().body(userDTO);
     }
 
 
