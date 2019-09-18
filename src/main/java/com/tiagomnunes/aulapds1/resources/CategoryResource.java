@@ -1,6 +1,6 @@
 package com.tiagomnunes.aulapds1.resources;
 
-import com.tiagomnunes.aulapds1.entities.Category;
+import com.tiagomnunes.aulapds1.dto.CategoryDTO;
 import com.tiagomnunes.aulapds1.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,23 +18,23 @@ public class CategoryResource {
     private CategoryService service;
 
     @GetMapping
-    public ResponseEntity<List<Category>> findAll() {
-        List<Category> categoryList = service.findAll();
+    public ResponseEntity<List<CategoryDTO>> findAll() {
+        List<CategoryDTO> categoryList = service.findAll();
         return ResponseEntity.ok().body(categoryList);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Category> findById(@PathVariable Long id) {
-        Category category = service.findById(id);
-        return ResponseEntity.ok().body(category);
+    public ResponseEntity<CategoryDTO> findById(@PathVariable Long id) {
+        CategoryDTO categoryDTO = service.findById(id);
+        return ResponseEntity.ok().body(categoryDTO);
     }
 
     @PostMapping
-    public ResponseEntity<Category> insert(@RequestBody Category category) {
-        category = service.insert(category);
+    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO categoryDTO) {
+        categoryDTO = service.insert(categoryDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(category.getId()).toUri();
-        return ResponseEntity.created(uri).body(category);
+                .buildAndExpand(categoryDTO.getId()).toUri();
+        return ResponseEntity.created(uri).body(categoryDTO);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -44,8 +44,8 @@ public class CategoryResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Category> update(@PathVariable Long id, @RequestBody Category category) {
-        category = service.update(id, category);
-        return ResponseEntity.ok(category);
+    public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        categoryDTO = service.update(id, categoryDTO);
+        return ResponseEntity.ok(categoryDTO);
     }
 }

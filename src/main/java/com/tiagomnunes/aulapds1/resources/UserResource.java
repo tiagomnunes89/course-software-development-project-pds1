@@ -2,7 +2,6 @@ package com.tiagomnunes.aulapds1.resources;
 
 import com.tiagomnunes.aulapds1.dto.UserDTO;
 import com.tiagomnunes.aulapds1.dto.UserInsertDTO;
-import com.tiagomnunes.aulapds1.entities.User;
 import com.tiagomnunes.aulapds1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,6 @@ public class UserResource {
         UserDTO userDTO = service.findById(id);
         return ResponseEntity.ok().body(userDTO);
     }
-
 
     @PostMapping
     public ResponseEntity<UserDTO> insert(@RequestBody UserInsertDTO userInsertDTO) {

@@ -1,5 +1,6 @@
 package com.tiagomnunes.aulapds1.services;
 
+import com.tiagomnunes.aulapds1.dto.CategoryDTO;
 import com.tiagomnunes.aulapds1.entities.Category;
 import com.tiagomnunes.aulapds1.repositories.CategoryRepository;
 import com.tiagomnunes.aulapds1.services.exceptions.DatabaseException;
@@ -10,8 +11,10 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -19,17 +22,21 @@ public class CategoryService {
     @Autowired
     private CategoryRepository repository;
 
-    public List<Category> findAll() {
-        return repository.findAll();
+    public List<CategoryDTO> findAll() {
+        List<Category> list = repository.findAll();
+        return list.stream().map(e -> new CategoryDTO(e)).collect(Collectors.toList());
     }
 
-    public Category findById(Long id) {
+    public CategoryDTO findById(Long id) {
         Optional<Category> category = repository.findById(id);
-        return category.orElseThrow(() -> new ResourceNotFoundException(id));
+        Category entity = category.orElseThrow(() -> new ResourceNotFoundException(id));
+        return new CategoryDTO(entity);
     }
 
-    public Category insert(Category category) {
-        return repository.save(category);
+    public CategoryDTO insert(CategoryDTO categoryDTO) {
+        Category entity = categoryDTO.toEntity();
+        entity = repository.save(entity);
+        return new CategoryDTO(entity);
     }
 
     public void delete(Long id) {
@@ -42,17 +49,19 @@ public class CategoryService {
         }
     }
 
-    public Category update(Long id, Category category) {
+    @Transactional
+    public CategoryDTO update(Long id, CategoryDTO categoryDTO) {
         try {
             Category entity = repository.getOne(id);
-            updateData(entity, category);
-            return repository.save(entity);
+            updateData(entity, categoryDTO);
+            entity = repository.save(entity);
+            return new CategoryDTO(entity);
         } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
 
-    private void updateData(Category entity, Category category) {
-        entity.setName(category.getName());
+    private void updateData(Category entity, CategoryDTO categoryDTO) {
+        entity.setName(categoryDTO.getName());
     }
 }

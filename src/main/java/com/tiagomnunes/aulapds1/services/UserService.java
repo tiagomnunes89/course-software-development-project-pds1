@@ -36,16 +36,16 @@ public class UserService {
 
     public UserDTO insert(UserInsertDTO userInsertDTO) {
         User entity = userInsertDTO.toEntity();
-        entity =  repository.save(entity);
+        entity = repository.save(entity);
         return new UserDTO(entity);
     }
 
     public void delete(Long id) {
         try {
             repository.deleteById(id);
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException(id);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DatabaseException(e.getMessage());
         }
     }
@@ -57,7 +57,7 @@ public class UserService {
             updateData(entity, userDTO);
             entity = repository.save(entity);
             return new UserDTO(entity);
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
