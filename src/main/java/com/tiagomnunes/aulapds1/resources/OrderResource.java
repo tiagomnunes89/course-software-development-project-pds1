@@ -1,5 +1,6 @@
 package com.tiagomnunes.aulapds1.resources;
 
+import com.tiagomnunes.aulapds1.dto.OrderDTO;
 import com.tiagomnunes.aulapds1.entities.Order;
 import com.tiagomnunes.aulapds1.services.OrderService;
 import com.tiagomnunes.aulapds1.services.UserService;
@@ -13,21 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/orders")
+@RequestMapping(value = "/orders")
 public class OrderResource {
 
     @Autowired
     private OrderService service;
 
     @GetMapping
-    public ResponseEntity<List<Order>> findAll(){
-        List<Order> orderList = service.findAll();
+    public ResponseEntity<List<OrderDTO>> findAll() {
+        List<OrderDTO> orderList = service.findAll();
         return ResponseEntity.ok().body(orderList);
     }
 
-    @GetMapping(value="/{id}")
-    public ResponseEntity<Order> findById(@PathVariable  Long id){
-        Order order = service.findById(id);
-        return ResponseEntity.ok().body(order);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<OrderDTO> findById(@PathVariable Long id) {
+        OrderDTO dto = service.findById(id);
+        return ResponseEntity.ok().body(dto);
     }
 }
