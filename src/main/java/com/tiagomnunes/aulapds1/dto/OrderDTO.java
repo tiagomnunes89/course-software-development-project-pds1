@@ -1,5 +1,6 @@
 package com.tiagomnunes.aulapds1.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tiagomnunes.aulapds1.entities.Order;
 import com.tiagomnunes.aulapds1.entities.User;
 import com.tiagomnunes.aulapds1.entities.enums.OrderStatus;
@@ -10,6 +11,7 @@ import java.time.Instant;
 public class OrderDTO implements Serializable {
 
     private Long id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
     private OrderStatus orderStatus;
     private Long clientId;

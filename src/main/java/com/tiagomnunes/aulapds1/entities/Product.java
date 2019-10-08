@@ -1,7 +1,5 @@
 package com.tiagomnunes.aulapds1.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -11,7 +9,6 @@ import java.util.Set;
 @Entity
 @Table(name = "tb_product")
 public class Product implements Serializable {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,7 +82,6 @@ public class Product implements Serializable {
         return categories;
     }
 
-    @JsonIgnore
     public Set<Order> getOrders(){
         Set<Order> set = new HashSet<>();
         for(OrderItem x : itens){
