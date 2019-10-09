@@ -7,8 +7,11 @@ import com.tiagomnunes.aulapds1.entities.Category;
 import com.tiagomnunes.aulapds1.entities.Product;
 import com.tiagomnunes.aulapds1.repositories.CategoryRepository;
 import com.tiagomnunes.aulapds1.repositories.ProductRepository;
+import com.tiagomnunes.aulapds1.services.exceptions.DatabaseException;
 import com.tiagomnunes.aulapds1.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -72,6 +75,16 @@ public class ProductService {
         entity.setImgURL(dto.getImgURL());
         if (dto.getCategories() != null && dto.getCategories().size() > 0) {
             setProductCategories(entity, dto.getCategories());
+        }
+    }
+
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
         }
     }
 }
