@@ -11,6 +11,7 @@ import com.tiagomnunes.aulapds1.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,28 @@ public class ProductService {
         for (CategoryDTO dto : categories) {
             Category category = categoryRepository.getOne(dto.getId());
             entity.getCategories().add(category);
+        }
+    }
+
+    @Transactional
+    public ProductDTO update(Long id, ProductCategoriesDTO dto) {
+        try {
+            Product entity = repository.getOne(id);
+            updateData(entity, dto);
+            entity = repository.save(entity);
+            return new ProductDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void updateData(Product entity, ProductCategoriesDTO dto) {
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setPrice(dto.getPrice());
+        entity.setImgURL(dto.getImgURL());
+        if (dto.getCategories() != null && dto.getCategories().size() > 0) {
+            setProductCategories(entity, dto.getCategories());
         }
     }
 }

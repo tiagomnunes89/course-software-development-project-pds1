@@ -37,4 +37,10 @@ public class ProductResource {
                 .buildAndExpand(newDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(newDTO);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductCategoriesDTO dto) {
+        ProductDTO newDTO = service.update(id, dto);
+        return ResponseEntity.ok(newDTO);
+    }
 }
