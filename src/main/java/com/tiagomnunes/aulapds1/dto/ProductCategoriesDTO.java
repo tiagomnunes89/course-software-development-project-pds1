@@ -1,15 +1,23 @@
 package com.tiagomnunes.aulapds1.dto;
 
 import com.tiagomnunes.aulapds1.entities.Product;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductCategoriesDTO implements Serializable {
 
+    @NotEmpty (message = "Can´t be empty")
+    @Length(min = 3, max = 15, message = "Length must be between 2 and 80")
     private String name;
+    @NotEmpty (message = "Can´t be empty")
+    @Length(min = 8, message = "Length must be at least 8")
     private String description;
+    @Positive (message = "Can't be a negative value")
     private Double price;
     private String imgURL;
 
