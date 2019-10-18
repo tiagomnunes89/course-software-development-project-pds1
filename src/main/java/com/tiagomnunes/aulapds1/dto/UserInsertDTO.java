@@ -1,12 +1,14 @@
 package com.tiagomnunes.aulapds1.dto;
 
 import com.tiagomnunes.aulapds1.entities.User;
+import com.tiagomnunes.aulapds1.services.validation.UserInsertValid;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
+@UserInsertValid
 public class UserInsertDTO implements Serializable {
 
     private Long id;
