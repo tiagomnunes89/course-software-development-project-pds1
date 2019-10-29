@@ -30,6 +30,9 @@ public class TestConfig implements CommandLineRunner {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public void run(String... args) throws Exception {
 
@@ -64,6 +67,17 @@ public class TestConfig implements CommandLineRunner {
 
         userRepository.saveAll(Arrays.asList(u1, u2));
         orderRepository.saveAll(Arrays.asList(o1, o2, o3));
+
+        Role r1 = new Role(null, "ROLE_CLIENT");
+        Role r2 = new Role(null, "ROLE_ADMIN");
+
+        roleRepository.saveAll(Arrays.asList(r1,r2));
+
+        u1.getRoles().add(r1);
+        u2.getRoles().add(r1);
+        u2.getRoles().add(r2);
+
+        userRepository.saveAll(Arrays.asList(u1,u2));
 
         OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
         OrderItem oi2 = new OrderItem(o1, p3, 1, p4.getPrice());
