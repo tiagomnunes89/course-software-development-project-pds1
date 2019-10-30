@@ -1,8 +1,9 @@
 package com.tiagomnunes.aulapds1.config;
 
-import java.util.Arrays;
-
+import com.tiagomnunes.aulapds1.security.JWTAuthorizationFilter;
+import com.tiagomnunes.aulapds1.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -13,16 +14,27 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private Environment env;
+
+    @Autowired
+    private JWTUtil jwtUtil;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     private static final String[] PUBLIC_MATCHERS = {"/h2-console/**"};
 
     private static final String[] PUBLIC_MATCHERS_GET = {"/products/**", "/categories/**",};
@@ -41,6 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll();
         http.authorizeRequests().antMatchers(PUBLIC_MATCHERS).permitAll();
         http.authorizeRequests().anyRequest().authenticated();
+
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(),jwtUtil,userDetailsService));
     }
 
     // SWAGGER
