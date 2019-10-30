@@ -75,13 +75,13 @@ public class TestConfig implements CommandLineRunner {
         Role r1 = new Role(null, "ROLE_CLIENT");
         Role r2 = new Role(null, "ROLE_ADMIN");
 
-        roleRepository.saveAll(Arrays.asList(r1,r2));
+        roleRepository.saveAll(Arrays.asList(r1, r2));
 
-        u1.getRoles().add(r1);
-        u2.getRoles().add(r1);
-        u2.getRoles().add(r2);
+        u1.addRole(r1);
+        u2.addRole(r1);
+        u2.addRole(r2);
 
-        userRepository.saveAll(Arrays.asList(u1,u2));
+        userRepository.saveAll(Arrays.asList(u1, u2));
 
         OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
         OrderItem oi2 = new OrderItem(o1, p3, 1, p4.getPrice());
