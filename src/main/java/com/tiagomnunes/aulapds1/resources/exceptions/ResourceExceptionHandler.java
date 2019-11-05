@@ -2,6 +2,7 @@ package com.tiagomnunes.aulapds1.resources.exceptions;
 
 import com.tiagomnunes.aulapds1.services.exceptions.DatabaseException;
 import com.tiagomnunes.aulapds1.services.exceptions.JWTAuthenticationException;
+import com.tiagomnunes.aulapds1.services.exceptions.JWTAuthorizationException;
 import com.tiagomnunes.aulapds1.services.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,15 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> jwtAuthentication (JWTAuthenticationException e, HttpServletRequest request) {
         String error = "Authentication error";
         HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError standardError = new StandardError(
+                Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(JWTAuthorizationException.class)
+    public ResponseEntity<StandardError> jwtAuthorization (JWTAuthorizationException e, HttpServletRequest request) {
+        String error = "Authorization error";
+        HttpStatus status = HttpStatus.FORBIDDEN;
         StandardError standardError = new StandardError(
                 Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);

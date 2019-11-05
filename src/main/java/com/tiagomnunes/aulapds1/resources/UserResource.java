@@ -27,7 +27,6 @@ public class UserResource {
         return ResponseEntity.ok().body(userList);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
         UserDTO userDTO = service.findById(id);
