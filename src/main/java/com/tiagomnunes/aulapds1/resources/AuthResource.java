@@ -1,6 +1,7 @@
 package com.tiagomnunes.aulapds1.resources;
 
 import com.tiagomnunes.aulapds1.dto.CredentialsDTO;
+import com.tiagomnunes.aulapds1.dto.EmailDTO;
 import com.tiagomnunes.aulapds1.dto.TokenDTO;
 import com.tiagomnunes.aulapds1.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,11 @@ public class AuthResource {
     public ResponseEntity<TokenDTO> refresh() {
         TokenDTO tokenDTO = service.refreshToken();
         return ResponseEntity.ok().body(tokenDTO);
+    }
+
+    @PostMapping("/forgot")
+    public ResponseEntity<Void> forgot(@RequestBody EmailDTO emailDTO) {
+        service.sendNewPassword(emailDTO.getEmail());
+        return ResponseEntity.noContent().build();
     }
 }
