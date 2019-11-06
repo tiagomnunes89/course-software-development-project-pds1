@@ -2,6 +2,7 @@ package com.tiagomnunes.aulapds1.services;
 
 import com.tiagomnunes.aulapds1.dto.CredentialsDTO;
 import com.tiagomnunes.aulapds1.dto.TokenDTO;
+import com.tiagomnunes.aulapds1.entities.Order;
 import com.tiagomnunes.aulapds1.entities.User;
 import com.tiagomnunes.aulapds1.repositories.UserRepository;
 import com.tiagomnunes.aulapds1.security.JWTUtil;
@@ -52,6 +53,13 @@ public class AuthService {
     public void validateSelfOrAdmin(Long userId) {
         User user = authenticated();
         if(user == null || (!user.getId().equals(userId)) && !user.hasRole("ROLE_ADMIN")){
+            throw new JWTAuthorizationException("Access denied");
+        }
+    }
+
+    public void validateOwnOrderOrAdmin(Order order) {
+        User user = authenticated();
+        if(user == null || (!user.getId().equals(order.getClient().getId())) && !user.hasRole("ROLE_ADMIN")){
             throw new JWTAuthorizationException("Access denied");
         }
     }
