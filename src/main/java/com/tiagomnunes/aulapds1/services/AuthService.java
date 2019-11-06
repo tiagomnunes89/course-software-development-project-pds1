@@ -52,15 +52,20 @@ public class AuthService {
 
     public void validateSelfOrAdmin(Long userId) {
         User user = authenticated();
-        if(user == null || (!user.getId().equals(userId)) && !user.hasRole("ROLE_ADMIN")){
+        if (user == null || (!user.getId().equals(userId)) && !user.hasRole("ROLE_ADMIN")) {
             throw new JWTAuthorizationException("Access denied");
         }
     }
 
     public void validateOwnOrderOrAdmin(Order order) {
         User user = authenticated();
-        if(user == null || (!user.getId().equals(order.getClient().getId())) && !user.hasRole("ROLE_ADMIN")){
+        if (user == null || (!user.getId().equals(order.getClient().getId())) && !user.hasRole("ROLE_ADMIN")) {
             throw new JWTAuthorizationException("Access denied");
         }
+    }
+
+    public TokenDTO refreshToken() {
+        User user = authenticated();
+        return new TokenDTO(user.getEmail(), jwtUtil.generateToken(user.getEmail()));
     }
 }
