@@ -55,6 +55,7 @@ public class CategoryService {
         }
     }
 
+    @Transactional
     public CategoryDTO update(Long id, CategoryDTO categoryDTO) {
         try {
             Category entity = categoryRepository.getOne(id);

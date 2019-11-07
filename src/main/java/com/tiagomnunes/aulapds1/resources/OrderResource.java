@@ -2,16 +2,13 @@ package com.tiagomnunes.aulapds1.resources;
 
 import com.tiagomnunes.aulapds1.dto.OrderDTO;
 import com.tiagomnunes.aulapds1.dto.OrderItemDTO;
-import com.tiagomnunes.aulapds1.entities.Order;
 import com.tiagomnunes.aulapds1.services.OrderService;
-import com.tiagomnunes.aulapds1.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.swing.*;
 import java.net.URI;
 import java.util.List;
 
@@ -60,5 +57,12 @@ public class OrderResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(orderDTO.getId()).toUri();
         return ResponseEntity.created(uri).body(orderDTO);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<OrderDTO> update(@PathVariable Long id, @RequestBody OrderDTO orderDTO) {
+        orderDTO = service.update(id, orderDTO);
+        return ResponseEntity.ok(orderDTO);
     }
 }

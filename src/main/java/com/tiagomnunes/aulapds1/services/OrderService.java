@@ -1,11 +1,9 @@
 package com.tiagomnunes.aulapds1.services;
 
+import com.tiagomnunes.aulapds1.dto.CategoryDTO;
 import com.tiagomnunes.aulapds1.dto.OrderDTO;
 import com.tiagomnunes.aulapds1.dto.OrderItemDTO;
-import com.tiagomnunes.aulapds1.entities.Order;
-import com.tiagomnunes.aulapds1.entities.OrderItem;
-import com.tiagomnunes.aulapds1.entities.Product;
-import com.tiagomnunes.aulapds1.entities.User;
+import com.tiagomnunes.aulapds1.entities.*;
 import com.tiagomnunes.aulapds1.entities.enums.OrderStatus;
 import com.tiagomnunes.aulapds1.repositories.OrderItemRepository;
 import com.tiagomnunes.aulapds1.repositories.OrderRepository;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -52,10 +51,10 @@ public class OrderService {
         return new OrderDTO(entity);
     }
 
-    public List<OrderDTO> findByClient () {
+    public List<OrderDTO> findByClient() {
         User client = authService.authenticated();
         List<Order> list = orderRepository.findByClient(client);
-        return list.stream().map(e-> new OrderDTO(e)).collect(Collectors.toList());
+        return list.stream().map(e -> new OrderDTO(e)).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -70,14 +69,14 @@ public class OrderService {
     public List<OrderDTO> findByClientId(Long clientId) {
         User client = userRepository.getOne(clientId);
         List<Order> list = orderRepository.findByClient(client);
-        return list.stream().map(e-> new OrderDTO(e)).collect(Collectors.toList());
+        return list.stream().map(e -> new OrderDTO(e)).collect(Collectors.toList());
     }
 
     @Transactional
     public OrderDTO placeOrder(List<OrderItemDTO> dtoList) {
         User client = authService.authenticated();
         Order order = new Order(null, Instant.now(), OrderStatus.WAITING_PAYMENT, client);
-        for (OrderItemDTO itemDTO : dtoList){
+        for (OrderItemDTO itemDTO : dtoList) {
             Product product = productRepository.getOne(itemDTO.getProductId());
             OrderItem item = new OrderItem(order, product, itemDTO.getQuantity(), itemDTO.getPrice());
             order.getItems().add(item);
@@ -86,5 +85,21 @@ public class OrderService {
         orderItemRepository.saveAll(order.getItems());
 
         return new OrderDTO(order);
+    }
+
+    @Transactional
+    public OrderDTO update(Long id, OrderDTO orderDTO) {
+        try {
+            Order entity = orderRepository.getOne(id);
+            updateData(entity, orderDTO);
+            entity = orderRepository.save(entity);
+            return new OrderDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
+    }
+
+    private void updateData(Order entity, OrderDTO orderDTO) {
+        entity.setOrderStatus(orderDTO.getOrderStatus());
     }
 }
