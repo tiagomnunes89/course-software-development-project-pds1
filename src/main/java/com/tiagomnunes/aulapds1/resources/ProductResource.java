@@ -36,6 +36,20 @@ public class ProductResource {
         return ResponseEntity.ok().body(productList);
     }
 
+    @GetMapping (value = "/category/{categoryId}")
+    public ResponseEntity<Page<ProductDTO>> findByCategoryPaged(
+            @PathVariable Long categoryId,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+
+        PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+
+        Page<ProductDTO> productList = service.findByCategoryPaged(categoryId, pageRequest);
+        return ResponseEntity.ok().body(productList);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
         ProductDTO userDTO = service.findById(id);
