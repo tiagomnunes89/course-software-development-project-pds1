@@ -1,9 +1,6 @@
 package com.tiagomnunes.aulapds1.resources.exceptions;
 
-import com.tiagomnunes.aulapds1.services.exceptions.DatabaseException;
-import com.tiagomnunes.aulapds1.services.exceptions.JWTAuthenticationException;
-import com.tiagomnunes.aulapds1.services.exceptions.JWTAuthorizationException;
-import com.tiagomnunes.aulapds1.services.exceptions.ResourceNotFoundException;
+import com.tiagomnunes.aulapds1.services.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -60,6 +57,15 @@ public class ResourceExceptionHandler {
     public ResponseEntity<StandardError> jwtAuthorization (JWTAuthorizationException e, HttpServletRequest request) {
         String error = "Authorization error";
         HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError standardError = new StandardError(
+                Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(ParamFormatException.class)
+    public ResponseEntity<StandardError> paramFormat (ParamFormatException e, HttpServletRequest request) {
+        String error = "Format error";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError standardError = new StandardError(
                 Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);
