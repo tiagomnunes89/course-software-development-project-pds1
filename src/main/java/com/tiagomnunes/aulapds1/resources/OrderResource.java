@@ -46,4 +46,11 @@ public class OrderResource {
         List<OrderDTO> orderList = service.findByClient();
         return ResponseEntity.ok().body(orderList);
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping(value = "/client/{clientId}")
+    public ResponseEntity<List<OrderDTO>> findByClientId(@PathVariable Long clientId) {
+        List<OrderDTO> orderList = service.findByClientId(clientId);
+        return ResponseEntity.ok().body(orderList);
+    }
 }
