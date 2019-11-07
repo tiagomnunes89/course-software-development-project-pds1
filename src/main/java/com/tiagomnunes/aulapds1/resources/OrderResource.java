@@ -1,6 +1,7 @@
 package com.tiagomnunes.aulapds1.resources;
 
 import com.tiagomnunes.aulapds1.dto.OrderDTO;
+import com.tiagomnunes.aulapds1.dto.OrderItemDTO;
 import com.tiagomnunes.aulapds1.entities.Order;
 import com.tiagomnunes.aulapds1.services.OrderService;
 import com.tiagomnunes.aulapds1.services.UserService;
@@ -32,6 +33,12 @@ public class OrderResource {
     public ResponseEntity<OrderDTO> findById(@PathVariable Long id) {
         OrderDTO dto = service.findById(id);
         return ResponseEntity.ok().body(dto);
+    }
+
+    @GetMapping(value = "/{id}/items")
+    public ResponseEntity<List<OrderItemDTO>> findItems(@PathVariable Long id) {
+        List<OrderItemDTO> list = service.findItems(id);
+        return ResponseEntity.ok().body(list);
     }
 
     @GetMapping(value = "/myorders")
