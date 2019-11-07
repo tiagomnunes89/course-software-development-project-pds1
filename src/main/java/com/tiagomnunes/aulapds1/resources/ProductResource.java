@@ -1,5 +1,6 @@
 package com.tiagomnunes.aulapds1.resources;
 
+import com.tiagomnunes.aulapds1.dto.CategoryDTO;
 import com.tiagomnunes.aulapds1.dto.ProductCategoriesDTO;
 import com.tiagomnunes.aulapds1.dto.ProductDTO;
 import com.tiagomnunes.aulapds1.services.ProductService;
@@ -30,13 +31,13 @@ public class ProductResource {
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
             @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
 
-        PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
 
         Page<ProductDTO> productList = service.findAllPaged(pageRequest);
         return ResponseEntity.ok().body(productList);
     }
 
-    @GetMapping (value = "/category/{categoryId}")
+    @GetMapping(value = "/category/{categoryId}")
     public ResponseEntity<Page<ProductDTO>> findByCategoryPaged(
             @PathVariable Long categoryId,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -44,7 +45,7 @@ public class ProductResource {
             @RequestParam(value = "orderBy", defaultValue = "name") String orderBy,
             @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
 
-        PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
 
         Page<ProductDTO> productList = service.findByCategoryPaged(categoryId, pageRequest);
         return ResponseEntity.ok().body(productList);
@@ -76,6 +77,27 @@ public class ProductResource {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping(value = "/{id}/addcategory")
+    public ResponseEntity<Void> addCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        service.addCategory(id, categoryDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping(value = "/{id}/removecategory")
+    public ResponseEntity<Void> removeCategory(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+        service.removeCategory(id, categoryDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping(value = "/{id}/setcategories")
+    public ResponseEntity<Void> setCategories(@PathVariable Long id, @RequestBody List<CategoryDTO> categoryDTOList) {
+        service.setCategories(id, categoryDTOList);
         return ResponseEntity.noContent().build();
     }
 }
